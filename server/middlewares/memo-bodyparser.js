@@ -9,7 +9,7 @@ import bodyparser from 'koa-bodyparser';
  * 封装koa-bodyparser的memo-bodyparser
  * @param {Object} config - koa-bodyparser的配置
  */
-export default function (config) {
+export default function memoBodyParser(config = {}) {
 
     config = extend(true, {
         // 支持的类型

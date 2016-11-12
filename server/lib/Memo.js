@@ -39,6 +39,7 @@ export default class Memo extends Koa {
         delegate(this, 'loader')
             .method('getConfig')
             .method('getMiddleware')
-            .getter('config');
+            .getter('config')
+            .getter('appInfo');
     }
 }

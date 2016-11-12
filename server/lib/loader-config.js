@@ -15,7 +15,7 @@ const debug = new Debug('memo:lib:loader-config');
 /**
  * 加载配置
  */
-export default function config() {
+export default function config(appInfo) {
     debug('======== loading config: start ========');
     let configs = [];
 
@@ -30,7 +30,7 @@ export default function config() {
         .map(file => path.resolve(__dirname, '../config', file));
 
     for (let file of configFiles) {
-        let config = require(file)();
+        let config = require(file)(appInfo);
         configs.push(config);
     }
 

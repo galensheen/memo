@@ -2,11 +2,12 @@
  * Created by galen on 16/11/9.
  */
 
-import Memo from './lib/Memo';4
+import Memo from './lib/Memo';
 
 const app = new Memo();
 
 app.use(async (ctx, next) => {
+    ctx.logger.error('test it!!');
     ctx.body = {test: 'Just a test!'};
 });
 

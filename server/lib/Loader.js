@@ -2,6 +2,9 @@
  * Created by galen on 16/11/9.
  */
 
+import path from 'path';
+
+const pkg = require('../../package.json');
 import loaderConfig from './loader-config';
 import loaderMdw from './loader-middleware';
 
@@ -11,25 +14,42 @@ export default class Loader {
      * @constructor
      */
     constructor() {
+
+        this.appDir = path.resolve(__dirname, '../../');
         this.config = {};
+        this.appInfo = {};
         this.middleware = [];
 
+        this.loadAppInfo();
         this.loadConfig();
         this.loadMiddleware();
+    }
+
+    /**
+     * 载入app信息
+     */
+    loadAppInfo() {
+        this.appInfo = {
+            name: pkg.name,
+            description: pkg.description,
+            appDir: path.resolve(__dirname, '../../'),
+            version: pkg.version,
+            keywords: pkg.keywords ? pkg.keywords.join(',') : ''
+        }
     }
 
     /**
      * 加载配置文件
      */
     loadConfig() {
-        this.config = loaderConfig();
+        this.config = loaderConfig(this.appInfo);
     }
 
     /**
      * 加载中间件
      */
     loadMiddleware() {
-        this.middleware = [].concat(loaderMdw(this.config.middlewares));
+        this.middleware = [].concat(loaderMdw(this.config));
     }
 
     /**

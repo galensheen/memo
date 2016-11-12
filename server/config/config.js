@@ -4,18 +4,21 @@
  */
 'use strict';
 
-const pkg = require('../../package.json');
-
-module.exports = function init() {
+/**
+ *
+ * @param {Object} appInfo - app基本信息
+ */
+module.exports = function init(appInfo) {
 
     return {
 
         // app基本信息
         app: {
-            name: pkg.name,
-            description: pkg.description,
-            version: pkg.version,
-            keywords: pkg.keywords ? pkg.keywords.join(',') : ''
+            name: appInfo.name,
+            description: appInfo.description,
+            appDir: appInfo.appDir,
+            version: appInfo.version,
+            keywords: appInfo.keywords
         },
 
         // 启动端口
@@ -28,23 +31,28 @@ module.exports = function init() {
         favicon: 'public/img/favicon.ico',
 
         // 启用的中间件
-        middlewares: {
-            bodyparser: {
-                index: 1,
-                config: {
-                    formLimit: '200kb',
-                    jsonLimit: '2mb',
-                    textLimit: '2mb',
-                    strict: false,
-                }
-            },
-            json: {
-                index: 2,
-                config: {
-                    pretty: false,
-                    param: 'pretty'
-                }
-            }
+        middlewares: [
+            'logger',
+            'bodyparser',
+            'json'
+        ],
+
+        // ============= 中间件的配置 ============
+        // logger中间件配置
+        logger: {
+            name: appInfo.name
+        },
+        // bodyparser中间件配置
+        bodyparser: {
+            formLimit: '200kb',
+            jsonLimit: '2mb',
+            textLimit: '2mb',
+            strict: false
+        },
+        // json中间件配置
+        json: {
+            pretty: false,
+            param: 'pretty'
         }
 
     }

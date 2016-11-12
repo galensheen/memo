@@ -11,7 +11,7 @@ import convert from 'koa-convert';
  * @param {Object} config - koa-json中间件的配置
  * @returns {GeneratorFunction}
  */
-export default function (config = {}) {
+export default function memoJson(config = {}) {
 
     config = extend(true, {
         pretty: false, param: 'pretty'

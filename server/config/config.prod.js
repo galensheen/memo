@@ -4,18 +4,26 @@
  */
 'use strict';
 
-
-module.exports = function prod() {
+/**
+ *
+ * @param {Object} appInfo - app基本信息
+ */
+module.exports = function prod(appInfo) {
 
     return {
 
         env: 'prod',
 
-        livereload: false,
-
         // 日志配置
-        log: {
-            level: 'error'
+        logger: {
+            name: appInfo.name,
+            streams: [{
+                level: 'error',
+                type: 'rotating-file',
+                period: '1d',
+                count: 10,
+                path: appInfo.appDir + '/logs/error.log',
+            }]
         },
 
         redis: {
