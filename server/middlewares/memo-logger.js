@@ -17,7 +17,7 @@ const debug = new Debug('memo:lib:loader-logger');
  * @param {Object} logConfig - 日志配置
  * @returns {Function}
  * @desc 可以参考koa-bunyan-logger，后面如果需要可以添加request和response的logger信息。
- * TODO: 后面自己实现集群的日志形式，worker发送信息到master, master负责写日志到file
+ * TODO: 后面自己实现集群日志形式，worker发送信息到master, master负责写日志到file
  */
 export default function logger(logConfig = {}) {
     debug('============= loading logger: start ==============');
