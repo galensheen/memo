@@ -34,6 +34,7 @@
     "delegates": "^1.0.0",
     "extend": "^3.0.0",
     "globby": "^6.1.0",
+    "inflection": "^1.10.0",
     "is-type-of": "^1.0.0",
     "koa": "^2.0.0-alpha.7",
     "koa-bodyparser": "^3.2.0",

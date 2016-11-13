@@ -7,7 +7,12 @@ import path from 'path';
 const pkg = require('../../package.json');
 import loaderConfig from './loader-config';
 import loaderMdw from './loader-middleware';
+import loaderCtrl from './loader-controller';
 
+
+/**
+ * 加载配置、中间件、控制器和路由
+ */
 export default class Loader {
 
     /**
@@ -19,10 +24,12 @@ export default class Loader {
         this.config = {};
         this.appInfo = {};
         this.middleware = [];
+        this.controllers = {};
 
         this.loadAppInfo();
         this.loadConfig();
         this.loadMiddleware();
+        this.loadControllers()
     }
 
     /**
@@ -50,6 +57,11 @@ export default class Loader {
      */
     loadMiddleware() {
         this.middleware = [].concat(loaderMdw(this.config));
+    }
+
+    loadControllers() {
+        this.controllers = loaderCtrl(this.appDir);
+        console.log(this.controllers);
     }
 
     /**
