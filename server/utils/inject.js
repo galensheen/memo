@@ -6,10 +6,9 @@ import is from 'is-type-of';
 
 /**
  * 在对象注入属性
- * @param obj
- * @param properties
- * @param result
- * @returns {Error}
+ * @param {Object} obj - 待注入的对象
+ * @param {String[]} properties - 注入属性
+ * @param {*} result - 待注入的值
  */
 export default function inject(obj, properties, result) {
 

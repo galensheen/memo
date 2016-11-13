@@ -61,7 +61,6 @@ export default class Loader {
 
     loadControllers() {
         this.controllers = loaderCtrl(this.appDir);
-        console.log(this.controllers);
     }
 
     /**

@@ -8,12 +8,18 @@ import assert from 'assert';
 import * as fs from 'fs';
 
 import globby from 'globby';
+import * as inflection from 'inflection';
 
 import inject from '../utils/inject';
 
 const debug = new Debug('memo:lib:loader-controller');
 
 
+/**
+ * 加载controllers保存对象中，供路由中使用
+ * @param {String} appDir - 应用根路径
+ * @returns {Object}
+ */
 export default function (appDir) {
     debug('========== loading controller: start ===========');
 
@@ -33,15 +39,15 @@ export default function (appDir) {
         debug(`LoadFiles => [${name}]: will load`);
         let result = require(file);
 
-        let properties = name.replace(/\.js$/, '')
+        // 将路径以小驼峰的形式，解析为数组
+      let properties = name.replace(/\.js$/, '')
             .split('/')
             .map(property => {
                 if (!reg.test(property)) {
                     throw new Error(`${property} does not match ${reg} in ${name}`);
                 }
-                return property.replace(/[_-][a-z]/ig, function (s) {
-                    return s.substring(1).toUpperCase();
-                });
+
+                return inflection.camelize(property.replace('-', '_'), true);
             });
 
         if (properties && properties.length) {
