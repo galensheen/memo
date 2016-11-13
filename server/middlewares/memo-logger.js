@@ -3,7 +3,6 @@
  */
 
 import path from 'path';
-import assert from 'assert';
 
 import Debug from 'debug';
 import bunyan from 'bunyan';
