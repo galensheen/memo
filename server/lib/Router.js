@@ -56,6 +56,39 @@ const REST_MAP = {
 class Router extends KoaRouter {
 
     constructor(options, app) {
+        super(options);
+        this.app = app;
+        this.controllers = options.controllers;
+        this.logger =options.logger;
+
+        const router = this;
+        this.app.url = this.url.bind(this);
+        this.app.router = this;
+
+        ['all', 'redirect', 'register', 'del', 'param', 'resources']
+            .concat(methods)
+            .forEach(method => {
+                this.app[method] = function () {
+                    router[method].apply(router, arguments);
+                };
+            });
+    }
+
+
+    resources(name, prefix, middleware) {
+        const route = this;
+
+        // 根据参数个数重新赋值
+        if (arguments.length >= 3) {
+            middleware = slice.call(arguments, 2);
+        } else {
+            middleware = slice.call(arguments, 1);
+            prefix = name;
+            name = null;
+        }
+
+        const controller = middleware.pop();
+
 
     }
 }

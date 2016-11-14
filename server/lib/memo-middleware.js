@@ -6,7 +6,7 @@ import path from 'path';
 import assert from 'assert';
 
 import Debug from 'debug';
-import is from 'is-type-of';
+import * as me from '../utils';
 
 const debug = new Debug('memo:lib:memo-middleware');
 
@@ -26,9 +26,9 @@ export default function (config = {}) {
     for (let mdw of mdws) {
         debug(`loading middleware ${mdw}`);
         let derive = require(`${mdwPath}/memo-${mdw}`);
-        assert(is.function(derive), `failed to load middleware ${mdw}, which must be a function`);
+        assert(me.isFunction(derive), `failed to load middleware ${mdw}, which must be a function`);
         let action = derive(config[mdw]);
-        assert(is.function(action), `failed to load middleware ${mdw}, which should return a function`);
+        assert(me.isFunction(action), `failed to load middleware ${mdw}, which should return a function`);
         middlewares.push(action);
     }
 

@@ -10,7 +10,7 @@ import * as fs from 'fs';
 import globby from 'globby';
 import * as inflection from 'inflection';
 
-import inject from '../utils/inject';
+import * as me from '../utils';
 
 const debug = new Debug('memo:lib:memo-controller');
 
@@ -51,7 +51,7 @@ export default function (appDir) {
             });
 
         if (properties && properties.length) {
-            inject(controllers, properties, result);
+            me.inject(controllers, properties, result);
         }
         debug(`LoadFiles => [${name}]: load success`);
     });
