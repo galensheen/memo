@@ -12,7 +12,7 @@ import * as inflection from 'inflection';
 
 import inject from '../utils/inject';
 
-const debug = new Debug('memo:lib:loader-controller');
+const debug = new Debug('memo:lib:memo-controller');
 
 
 /**

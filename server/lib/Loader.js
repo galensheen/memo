@@ -5,9 +5,9 @@
 import path from 'path';
 
 const pkg = require('../../package.json');
-import loaderConfig from './loader-config';
-import loaderMdw from './loader-middleware';
-import loaderCtrl from './loader-controller';
+import loaderConfig from './memo-config';
+import loaderMdw from './memo-middleware';
+import loaderCtrl from './memo-controller';
 
 
 /**

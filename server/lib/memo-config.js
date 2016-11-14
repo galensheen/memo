@@ -10,7 +10,7 @@ import globby from 'globby';
 import extend from 'extend';
 import Debug from 'debug';
 
-const debug = new Debug('memo:lib:loader-config');
+const debug = new Debug('memo:lib:memo-config');
 
 /**
  * 加载配置

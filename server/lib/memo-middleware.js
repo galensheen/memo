@@ -8,7 +8,7 @@ import assert from 'assert';
 import Debug from 'debug';
 import is from 'is-type-of';
 
-const debug = new Debug('memo:lib:loader-middleware');
+const debug = new Debug('memo:lib:memo-middleware');
 
 /**
  * 加载中间件
