@@ -2,10 +2,10 @@
  * 默认配置
  * Created by galen on 16/11/7.
  */
-'use strict';
+
+import path from 'path';
 
 /**
- *
  * @param {Object} appInfo - app基本信息
  */
 module.exports = function init(appInfo) {
@@ -34,7 +34,8 @@ module.exports = function init(appInfo) {
         middlewares: [
             'logger',
             'bodyparser',
-            'json'
+            'json',
+            'static'
         ],
 
         // ============= 中间件的配置 ============
@@ -53,6 +54,10 @@ module.exports = function init(appInfo) {
         json: {
             pretty: false,
             param: 'pretty'
+        },
+        // static中间件
+        static: {
+            serves: [{route: 'public', path: path.join(appInfo.appDir, 'public')}]
         }
 
     }

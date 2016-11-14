@@ -3,10 +3,6 @@
  */
 
 export function index(ctx, next) {
-
+    ctx.body = {index: 'controller index'};
 }
 
-
-export function add(ctx, next) {
-
-}

@@ -7,6 +7,7 @@ import Memo from './lib/Memo';
 const app = new Memo();
 
 app.use(async (ctx, next) => {
+    console.log('----------------------');
     ctx.logger.error('test it!!');
     ctx.body = {test: 'Just a test!'};
 });

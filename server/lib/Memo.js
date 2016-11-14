@@ -23,23 +23,20 @@ export default class Memo extends Koa {
      */
     constructor(options = {}) {
 
-        options.baseDir = options.baseDir || process.cwd();
-        assert(typeof options.baseDir === 'string', 'options.baseDir is required and must be a string');
-        assert(fs.existsSync(options.baseDir), `options.baseDir ${options.baseDir} not exists`);
-        assert(fs.statSync(options.baseDir).isDirectory(), `options.baseDir ${options.baseDir} is not a directory`);
-        debug(`baseDir is: ${options.baseDir}`);
-
         super();
 
-        this.loader = new Loader();
-
-        this.middleware = [].concat(this.loader.getMiddleware());
+        this.loader = new Loader(this);
 
         // 将loader的方法代理到app上
         delegate(this, 'loader')
             .method('getConfig')
-            .method('getMiddleware')
             .getter('config')
             .getter('appInfo');
+
+        this.init();
+    }
+
+    init() {
+        this.loader.init();
     }
 }

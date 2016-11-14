@@ -3,11 +3,13 @@
  */
 
 import path from 'path';
+import extend from 'extend';
 
 const pkg = require('../../package.json');
 import loaderConfig from './memo-config';
 import loaderMdw from './memo-middleware';
 import loaderCtrl from './memo-controller';
+import loaderRoutes from './memo-router';
 
 
 /**
@@ -18,18 +20,20 @@ export default class Loader {
     /**
      * @constructor
      */
-    constructor() {
-
+    constructor(app) {
+        this.app = app;
         this.appDir = path.resolve(__dirname, '../../');
-        this.config = {};
         this.appInfo = {};
-        this.middleware = [];
+        this.config = {};
+        this.middlewares = [];
         this.controllers = {};
+        this.routers = [];
 
         this.loadAppInfo();
         this.loadConfig();
-        this.loadMiddleware();
-        this.loadControllers()
+        this.loadMiddlewares();
+        this.loadControllers();
+        this.loadRoutes();
     }
 
     /**
@@ -42,7 +46,8 @@ export default class Loader {
             appDir: path.resolve(__dirname, '../../'),
             version: pkg.version,
             keywords: pkg.keywords ? pkg.keywords.join(',') : ''
-        }
+        };
+        extend(this.app, this.appInfo);
     }
 
     /**
@@ -55,31 +60,41 @@ export default class Loader {
     /**
      * 加载中间件
      */
-    loadMiddleware() {
-        this.middleware = [].concat(loaderMdw(this.config));
+    loadMiddlewares() {
+        this.middlewares = [].concat(loaderMdw(this.config));
     }
 
+    /**
+     * 加载controllers
+     */
     loadControllers() {
         this.controllers = loaderCtrl(this.appDir);
     }
 
     /**
-     *  获取配置
-     * @param {string?} key - 配置参数的key
-     * @returns {*}
+     * 加载路由
      */
-    getConfig(key) {
-        if (key) {
-            return this.config[key];
-        }
+    loadRoutes() {
+        this.routers = loaderRoutes(this.appDir, this.controllers);
+    }
+
+    /**
+     * getter config
+     * @returns {{}|*}
+     */
+    getConfig() {
         return this.config;
     }
 
     /**
-     * 获取中间件list
-     * @returns {Array.<*>|*|Array}
+     * 初始化中间件和路由到app
      */
-    getMiddleware() {
-        return this.middleware;
+    init() {
+        this.middlewares.forEach(middleware => {
+            this.app.use(middleware);
+        });
+        this.routers.forEach(router => {
+            this.app.use(router.routes());
+        });
     }
 }
