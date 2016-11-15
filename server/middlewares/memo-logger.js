@@ -8,6 +8,7 @@ import Debug from 'debug';
 import bunyan from 'bunyan';
 import uuid from 'uuid';
 import mkdirp from 'mkdirp';
+import onFinished from 'on-finished';
 
 const debug = new Debug('memo:lib:loader-logger');
 
@@ -33,7 +34,7 @@ export default function memo_logger(logConfig = {}) {
     let loggerInstance = bunyan.createLogger(logConfig);
 
     debug('============= loading logger: end ==============');
-    return function logger(ctx, next) {
+    return async function logger(ctx, next) {
         let reqId = ctx.request.get(header) || uuid.v4();
 
         ctx[ctxProp] = reqId;
@@ -41,6 +42,10 @@ export default function memo_logger(logConfig = {}) {
 
         ctx.logger = loggerInstance.child({req_id: reqId});
 
-        return next();
+        await next();
+
+        onFinished(ctx.res, () => {
+            ctx.logger = null;
+        });
     };
 }
