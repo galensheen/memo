@@ -35,7 +35,8 @@ export default function init(appInfo) {
             'bodyparser',
             'json',
             'static',
-            'views'
+            'views',
+            'context'
         ],
 
         // ============= 中间件的配置 ============
@@ -64,7 +65,7 @@ export default function init(appInfo) {
             root: path.join(appInfo.appDir, 'server/views'),
             options: {
                 map: {
-                    'server.html': 'dot'
+                    'server.html': 'handlebars'
                 },
                 extension: 'server.html'
             }

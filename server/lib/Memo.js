@@ -31,15 +31,18 @@ export default class Memo extends Koa {
         //     .getter('config')
         //     .getter('appInfo');
 
-        this.init();
         this.context.appInfo = {
             name: this.loader.appInfo.name,
             description: this.loader.appInfo.description,
             version: this.loader.appInfo.version,
             keywords: this.loader.appInfo.keywords
         };
+
+        // 初始化中间件和路由
+        this.init();
     }
 
+    // 调用loader的init初始化middleware和router
     init() {
         this.loader.init();
     }

@@ -35,7 +35,7 @@ export default function (config = {}) {
                 middlewares.push(action);
             })
         } else {
-            let action = derive(config[mdw]);
+            let action = derive(config[mdw] || {});
             assert(me.isFunction(action), `failed to load middleware ${mdw}, which should return a function`);
             middlewares.push(action);
         }

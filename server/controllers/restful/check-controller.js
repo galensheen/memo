@@ -3,5 +3,6 @@
  */
 
 export async function check(ctx, next) {
-    return ctx.body = {restful: 'restful.checkController.check'};
+    // ctx.body = {restful: 'restful.checkController.check'};
+    ctx.success({restful: 'restful.checkController.check'});
 }
