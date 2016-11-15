@@ -27,9 +27,18 @@ export default function (config = {}) {
         debug(`loading middleware ${mdw}`);
         let derive = require(`${mdwPath}/memo-${mdw}`);
         assert(me.isFunction(derive), `failed to load middleware ${mdw}, which must be a function`);
-        let action = derive(config[mdw]);
-        assert(me.isFunction(action), `failed to load middleware ${mdw}, which should return a function`);
-        middlewares.push(action);
+
+        if (me.isArray(config[mdw])) {
+            config[mdw].forEach(foo => {
+                let action = derive(foo);
+                assert(me.isFunction(action), `failed to load middleware ${mdw}, which should return a function`);
+                middlewares.push(action);
+            })
+        } else {
+            let action = derive(config[mdw]);
+            assert(me.isFunction(action), `failed to load middleware ${mdw}, which should return a function`);
+            middlewares.push(action);
+        }
     }
 
     debug(`=============== loading middleware: end ===============`);

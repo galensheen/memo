@@ -8,7 +8,7 @@
 /**
  * @param {Object} appInfo - app基本信息
  */
-module.exports = function pre(appInfo) {
+export default function pre(appInfo) {
 
     return {
 

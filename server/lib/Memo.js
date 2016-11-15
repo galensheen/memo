@@ -2,11 +2,9 @@
  * Created by galen on 16/11/9.
  */
 
-import fs from 'fs';
-import assert from 'assert';
-import delegate from 'delegates';
 import Koa from 'koa';
 import Debug from 'debug';
+import extend from 'extend';
 
 import Loader from './Loader';
 
@@ -27,13 +25,19 @@ export default class Memo extends Koa {
 
         this.loader = new Loader(this);
 
-        // 将loader的方法代理到app上
-        delegate(this, 'loader')
-            .method('getConfig')
-            .getter('config')
-            .getter('appInfo');
+        // // 将loader的方法代理到app上
+        // delegate(this.context, 'loader')
+        //     .method('getConfig')
+        //     .getter('config')
+        //     .getter('appInfo');
 
         this.init();
+        this.context.appInfo = {
+            name: this.loader.appInfo.name,
+            description: this.loader.appInfo.description,
+            version: this.loader.appInfo.version,
+            keywords: this.loader.appInfo.keywords
+        };
     }
 
     init() {

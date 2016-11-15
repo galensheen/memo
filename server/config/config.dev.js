@@ -8,7 +8,7 @@
  *
  * @param {Object} appInfo - app基本信息
  */
-module.exports = function dev(appInfo) {
+export default function dev(appInfo) {
 
     return {
 

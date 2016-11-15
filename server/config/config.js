@@ -8,7 +8,7 @@ import path from 'path';
 /**
  * @param {Object} appInfo - app基本信息
  */
-module.exports = function init(appInfo) {
+export default function init(appInfo) {
 
     return {
 
@@ -16,7 +16,6 @@ module.exports = function init(appInfo) {
         app: {
             name: appInfo.name,
             description: appInfo.description,
-            appDir: appInfo.appDir,
             version: appInfo.version,
             keywords: appInfo.keywords
         },
@@ -35,7 +34,8 @@ module.exports = function init(appInfo) {
             'logger',
             'bodyparser',
             'json',
-            'static'
+            'static',
+            'views'
         ],
 
         // ============= 中间件的配置 ============
@@ -55,10 +55,19 @@ module.exports = function init(appInfo) {
             pretty: false,
             param: 'pretty'
         },
-        // static中间件
-        static: {
-            serves: [{route: 'public', path: path.join(appInfo.appDir, 'public')}]
+        // static中间件，同一个中间件使用多次，使用数组配置
+        static: [
+            {route: 'public', path: path.join(appInfo.appDir, 'public')}
+        ],
+        // views中间件
+        views: {
+            root: path.join(appInfo.appDir, 'server/views'),
+            options: {
+                map: {
+                    'server.html': 'dot'
+                },
+                extension: 'server.html'
+            }
         }
-
     }
 };

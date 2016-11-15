@@ -4,11 +4,13 @@
  */
 'use strict';
 
+import path from 'path';
+
 /**
  *
  * @param {Object} appInfo - app基本信息
  */
-module.exports = function prod(appInfo) {
+export default function prod(appInfo) {
 
     return {
 
@@ -33,6 +35,19 @@ module.exports = function prod(appInfo) {
         mysql: {
             username: 'prod',
             password: 'prod-password'
+        },
+
+
+        // views中间件
+        views: {
+            root: path.join(appInfo.appDir, 'server/views'),
+            options: {
+                map: {
+                    'server.html': 'dot'
+                },
+                extension: 'server.html',
+                cache: true
+            }
         }
     }
 };

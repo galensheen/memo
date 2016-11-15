@@ -47,7 +47,6 @@ export default class Loader {
             version: pkg.version,
             keywords: pkg.keywords ? pkg.keywords.join(',') : ''
         };
-        extend(this.app, this.appInfo);
     }
 
     /**
