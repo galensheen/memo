@@ -15,22 +15,24 @@ const debug = new Debug('memo:lib:memo-config');
 /**
  * 加载配置
  */
-export default function config(appInfo) {
+export default function config(appDir) {
     debug('======== loading config: start ========');
+
     let configs = [];
 
-    var env = process.env.NODE_ENV = process.env.NODE_ENV || 'dev';
+    let env = process.env.NODE_ENV = process.env.NODE_ENV || 'dev';
+
 
     debug(`======== loading config: env => ${env} ========`);
 
-    var envFile = globby.sync(`**/config.${env}.js`, {cwd: path.resolve(__dirname, '../config')});
+    let envFile = globby.sync(`**/config.${env}.js`, {cwd: path.resolve(appDir, 'server/config')});
     assert(!!envFile.length, `Not found config file: config.${env}.js`);
 
     let configFiles = ['config.js', ...envFile]
-        .map(file => path.resolve(__dirname, '../config', file));
+        .map(file => path.resolve(appDir, 'server/config', file));
 
     for (let file of configFiles) {
-        let config = require(file)(appInfo);
+        let config = require(file)(appDir);
         configs.push(config);
     }
 

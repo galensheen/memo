@@ -7,11 +7,11 @@ import bodyparser from 'koa-bodyparser';
 
 /**
  * 封装koa-bodyparser的memo-bodyparser
- * @param {Object} config - koa-bodyparser的配置
+ * @param {Object} options - koa-bodyparser的配置
  */
-export default function memo_bodyparser(config = {}) {
+export default function mdw_bodyparser(options = {}) {
 
-    config = extend(true, {
+    options = extend(true, {
         // 支持的类型
         enableTypes: ['json', 'form'],
         encode: 'utf-8',
@@ -29,7 +29,7 @@ export default function memo_bodyparser(config = {}) {
         onerror: function (err, ctx) {
             ctx.throw('body parse error', 422);
         }
-    }, config);
+    }, options);
 
-    return bodyparser(config);
+    return bodyparser(options);
 };

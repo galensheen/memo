@@ -17,15 +17,16 @@ const debug = new Debug('memo:lib:memo-controller');
 
 /**
  * 加载controllers保存对象中，供路由中使用
- * @param {String} appDir - 应用根路径
+ * @param {Object} config
  * @returns {Object}
  */
-export default function (appDir) {
+export default function (config = {}) {
+    assert(!!config.appDir, '加载controllers失败，appDir不能为空');
     debug('========== loading controller: start ===========');
 
     // 解析controllers的绝对路径
-    const controllerDir = path.resolve(appDir, 'server/controllers');
-    assert(fs.existsSync(controllerDir), 'server/controllers不存在');
+    const controllerDir = path.resolve(config.appDir, 'server/controllers');
+    assert(fs.existsSync(controllerDir), '加载controllers失败，server/controllers不存在');
 
     let controllers = {};
 
@@ -36,7 +37,7 @@ export default function (appDir) {
     files.forEach(name => {
         const file = path.resolve(controllerDir, name);
 
-        debug(`LoadFiles => [${name}]: will load`);
+        debug(`controller => [${name}]: will load`);
         let result = require(file);
 
         // 将路径以小驼峰的形式，解析为数组
@@ -53,7 +54,7 @@ export default function (appDir) {
         if (properties && properties.length) {
             me.inject(controllers, properties, result);
         }
-        debug(`LoadFiles => [${name}]: load success`);
+        debug(`controller => [${name}]: load success`);
     });
 
 

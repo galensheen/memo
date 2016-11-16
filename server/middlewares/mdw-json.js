@@ -8,14 +8,14 @@ import convert from 'koa-convert';
 
 /**
  * 封装koa-json的memo-json中间件
- * @param {Object} config - koa-json中间件的配置
+ * @param {Object} options - koa-json中间件的配置
  * @returns {GeneratorFunction}
  */
-export default function memoJson(config = {}) {
+export default function mdw_json(options = {}) {
 
-    config = extend(true, {
+    options = extend(true, {
         pretty: false, param: 'pretty'
-    }, config);
+    }, options);
 
-    return convert(json(config));
+    return convert(json(options));
 }

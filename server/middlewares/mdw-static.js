@@ -7,13 +7,13 @@ import * as me from '../utils';
 
 /**
  * 静态文件服务
- * @param config
+ * @param options
  */
-export default function memo_static(config = {}) {
+export default function mdw_static(options = {}) {
 
-    if (!me.isObject(config)) {
+    if (!me.isObject(options)) {
         return;
     }
 
-    return serve(config.route, config.path);
+    return serve(options.route, options.path);
 }

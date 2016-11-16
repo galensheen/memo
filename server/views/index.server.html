@@ -2,12 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Test for dot views - {{app.name}}</title>
+    <link href="{{app.favicon}}" rel="shortcut icon" type="image/x-icon">
+    <title> {{app.name}}</title>
 </head>
 <body>
-    1111111111=========
-<br/>
-22222222222<br/>
-{{test}}<br/>{{app.description}}
+    <h1>应用名: {{app.name}}</h1>
+    <h2>版本号: {{app.version}}</h2>
+    <h2>关键字: {{app.keywords}}</h2>
+    <h2>描述: {{app.description}}</h2>
+    <h3>Controller渲染字段: {{test}}</h3>
 </body>
 </html>
