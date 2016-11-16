@@ -96,6 +96,11 @@ export default function (config) {
         // context中间件
         context: {
             // 默认不需要配置
+        },
+
+        // livereload
+        livereload: {
+            // 默认不需要配置
         }
 
     };
