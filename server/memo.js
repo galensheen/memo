@@ -26,6 +26,7 @@ middlewares.forEach(middleware => {
     app.use(middleware);
 });
 
+// 加载路由
 routers.forEach(router => {
     app.use(router.routes());
 });

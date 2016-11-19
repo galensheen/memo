@@ -8,19 +8,20 @@ export default function (config) {
 
     return {
 
-        // 启用的中间件
+        // 启用的中间件, all: 所有运行环境都启动，dev: 只有dev环境启动
         middleware: [
             {name: 'info', env: 'all'},
             {name: 'logger', env: 'all'},
             {name: 'bodyparser', env: 'all'},
             {name: 'json', env: 'all'},
             {name: 'static', env: 'all'},
-            {name: 'views', env: 'all'},
+            {name: 'dot', env: 'all'},
             {name: 'context', env: 'all'},
             //{name: 'livereload', env: 'dev'}
         ],
 
         // ============= 中间件的配置(如果中间件需要配置) ============
+        // all是在没有配置一定运行环境的配置，如果配置了运行环境，如dev，则只使用dev的配置
         // info中间件
         info: {
             all: {
@@ -80,16 +81,22 @@ export default function (config) {
             }]
         },
 
-        // views中间件
-        views: {
-            all: {
-                root: path.join(config.appDir, 'server/views'),
-                options: {
-                    map: {
-                        'server.html': 'handlebars'
-                    },
-                    extension: 'server.html'
-                }
+        // dot中间件
+        dot: {
+            dev: {
+                root: path.resolve(config.appDir, 'server/views'),
+                extension: 'server.html',
+                cacheable: false
+            },
+            pre: {
+                root: path.resolve(config.appDir, 'server/views'),
+                extension: 'server.html',
+                cacheable: true
+            },
+            pro: {
+                root: path.resolve(config.appDir, 'server/views'),
+                extension: 'server.html',
+                cacheable: true
             }
         },
 

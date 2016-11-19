@@ -4,6 +4,6 @@
 
 export async function index(ctx, next) {
     //ctx.body = {index: 'controller index'};
-    await ctx.render('index', {test: '这是一个测试！！！'});
+    return ctx.render('index', {test: '这是一个测试！！！'});
 }
 
