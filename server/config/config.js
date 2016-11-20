@@ -22,6 +22,5 @@ export default function init(appDir) {
         },
 
         appDir: appDir
-
     }
 };

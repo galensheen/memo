@@ -78,6 +78,9 @@ export default function (config) {
             all: [{
                 route: 'public',
                 path: path.resolve(config.appDir, 'public')
+            }, {
+                route: 'client',
+                path: path.resolve(config.appDir, 'client')
             }]
         },
 

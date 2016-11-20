@@ -45,16 +45,16 @@ export default function (config = {}) {
         let env = mdwConfig[mdw.name] && mdwConfig[mdw.name][config.env];
 
         // 确认使用的配置
-        let configs = env || all;
+        let options = env || all;
 
-        if (me.isArray(configs)) {
-            configs.forEach(cfg => {
-                let action = derive(cfg || {});
+        if (me.isArray(options)) {
+            options.forEach(option => {
+                let action = derive(option || {}, config);
                 assert(me.isFunction(action), `failed to load middleware ${mdw.name}, should return a function`);
                 middlewares.push(action);
             })
         } else {
-            let action = derive(configs || {});
+            let action = derive(options || {}, config);
             assert(me.isFunction(action), `failed to load middleware ${mdw.name}, which should return a function`);
             middlewares.push(action);
         }

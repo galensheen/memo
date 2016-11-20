@@ -1,15 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <link href="[[=app.favicon]]" rel="shortcut icon" type="image/x-icon">
-    <title>[[=app.name]]</title>
-</head>
-<body>
-    <h1>应用名: [[=app.name]]</h1>
-    <h2>版本号: [[=app.version]]</h2>
-    <h2>关键字: [[=app.keywords]]</h2>
-    <h2>描述: [[=app.description]]</h2>
-    <h3>Controller渲染字段: [[=model.test]][[=app.name]]</h3>
-</body>
-</html>
+---
+layout: layout/dot
+title: The example for koa2-dot
+---
+
+[[## content:
+    <h3>From index.server.html</h3>
+    <ul>
+        <li>The engine of model: [[= model.engine]]</li>
+        <li>The pkg of model: [[= model.pkg]]</li>
+        <li>The name of app: [[= app.name]]</li>
+        <li>The desc of app: [[= app.desc]]</li>
+    </ul>
+##]]
