@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <link href="[[= app.favicon]]" rel="shortcut icon" type="image/x-icon">
-    <title>[[= layout.title ]]</title>
+    <title>[[= layout.title]]</title>
+    [[= layout.head]]
 </head>
 <body>
-    <h1>From base.server.html</h1>
-    <div>
-        [[= layout.body ]]
-    </div>
-    [[# include('partials/footer') ]]
+    [[= layout.header]]
+
+    [[= layout.content]]
+
+    [[= layout.footer]]
 </body>
 </html>

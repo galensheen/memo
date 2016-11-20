@@ -79,8 +79,8 @@ export default function (config) {
                 route: 'public',
                 path: path.resolve(config.appDir, 'public')
             }, {
-                route: 'client',
-                path: path.resolve(config.appDir, 'client')
+                route: 'docs',
+                path: path.resolve(config.appDir, 'docs')
             }]
         },
 
