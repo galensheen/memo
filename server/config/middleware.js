@@ -10,14 +10,14 @@ export default function (config) {
 
         // 启用的中间件, all: 所有运行环境都启动，dev: 只有dev环境启动
         middleware: [
+            {name: 'koa-logger', env: 'dev'},
             {name: 'info', env: 'all'},
             {name: 'logger', env: 'all'},
             {name: 'bodyparser', env: 'all'},
             {name: 'json', env: 'all'},
             {name: 'static', env: 'all'},
             {name: 'dot', env: 'all'},
-            {name: 'context', env: 'all'},
-            //{name: 'livereload', env: 'dev'}
+            {name: 'context', env: 'all'}
         ],
 
         // ============= 中间件的配置(如果中间件需要配置) ============

@@ -41,6 +41,7 @@ export default function mdw_logger(options = {}) {
         ctx.request[requestProp] = reqId;
 
         ctx.logger = loggerInstance.child({req_id: reqId});
+        // ctx.logger.info({path: ctx.path, method: ctx.method});
 
         await next();
 
