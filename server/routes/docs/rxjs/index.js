@@ -6,5 +6,5 @@ export default function (router, app) {
 
     router.prefix('/docs/rxjs');
 
-    router.get( '/', 'docs.rxjs.indexController.index');
+    router.get( '/tutorial', 'docs.rxjs.indexController.tutorial');
 };

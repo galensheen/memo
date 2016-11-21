@@ -47,49 +47,51 @@ myObservable.subscribe(value => console.log(value));
 
 ## 控制事件流
 ```javascript
-// typing 'hello world'
-var input = Rx.Observable.fromEvent(document.querySelector('input'), 'keypress');
+// 测例子输入 'hello world'
+var input = Rx.Observable.fromEvent(document.querySelector('input'), 'keyup');
 
-// Filter out target values less than 3 characters long
-input.filter(event => event.target.value.length > 2).subscribe(value => console.log(value)); // 'hel'
+// 过滤掉输入字符长度小于3的事件
+input.filter(event => event.target.value.length > 2).subscribe(event => console.log(event.target.value));
 
-// Delay the events
-input.delay(200).subscribe(value => console.log(value)); // 'h' -200ms-> 'e' -200ms-> 'l'...
+// 事件推迟200ms
+input.delay(200).subscribe(event => console.log(event.target.value));
 
-// Only let through an event every 200ms
-input.throttleTime(200).subscribe(value => console.log(value)); // 'h' -200ms-> 'w'
+// 每200ms事件发生一次
+input.throttleTime(200).subscribe(event => console.log(event.target.value));
 
-// Let through latest event after 200ms
-input.debounceTime(200).subscribe(value => console.log(value)); // 'o' -200ms -> 'd'
+// 每200ms最多只发生一次事件
+input.debounceTime(200).subscribe(event => console.log(event.target.value));
 
-// Stop the stream of events after 3 events
-input.take(3).subscribe(value => console.log(value)); // 'hel'
+// 接收3次事件后停止接收事件
+input.take(3).subscribe(event => console.log(event.target.value));
 
-// passes through events until other observable triggers an event
+// 当停止事件发生后不再接收事件
 var stopStream = Rx.Observable.fromEvent(document.querySelector('button'), 'click');
-input.takeUntil(stopStream).subscribe(value => console.log(value)); // 'hello' (click)
+input.takeUntil(stopStream).subscribe(event => console.log(event.target.value));
 ```
 
-## 处理值
+## 值的处理
 ```javascript
-// typing 'hello world'
-var input = Rx.Observable.fromEvent(document.querySelector('input'), 'keypress');
+// 输入'hello world'
+var input = Rx.Observable.fromEvent(document.querySelector('input'), 'keyup');
 
-// Pass on a new value
-input.map(event => event.target.value).subscribe(value => console.log(value)); // 'h'
+// 传递一个新值
+input.map(event => event.target.value).subscribe(value => console.log(value));
 
-// Pass on a new value by plucking it
-input.pluck('target', 'value').subscribe(value => console.loog(value)); // 'h'
+// 将值取出并传递
+input.pluck('target', 'value').subscribe(value => console.loog(value));
 
-// Pass the two previous values
-input.pluck('target', 'value').pariwise().subscribe(value => console.log(value)); // ['h', 'e']
+// 返回之前和当前的值
+input.pluck('target', 'value').pariwise().subscribe(value => console.log(value));
 
-// Only pass unique values through
-input.pluck('target', 'value').distinct().subscribe(value => console.log(value)); // 'helo wrd'
+// 仅返回不重复的值
+input.distinct(event => event.key).pluck('target', 'value').subscribe(value => console.log(value)); // 'helo wrd'
 
-// Do not pass repeating values through
-input.pluck('target', 'value').distinctUntilChannged().subscribe(value => console.log(value)); // 'helo world'
+// 只传不连续的值
+input.distinctUntilChannged((pre, cur) => pre.key === cur.key).pluck('target', 'value').subscribe(value => console.log(value)); // 'helo world'
 ```
 
-## 创建应用
-> RxJS是一个很棒的工具，它使你的代码不容易出错。
+# 创建应用
+----------------------------------------------------
+> RxJS是一个很棒的工具，使用无状态函数，使你的代码更加健壮。但是我们的应用是有状态的，那无状态的RxJS和有状态的应用是怎么联系起来的？
+> 让我们建立一个简单应用存储值为0，然后每点击一次，值加1.

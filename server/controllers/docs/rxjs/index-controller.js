@@ -5,6 +5,6 @@
 /**
  * index controller
  */
-export async function index(ctx, next) {
-    return ctx.render('docs/rxjs/index');
+export async function tutorial(ctx, next) {
+    return ctx.render('docs/rxjs/tutorial');
 }

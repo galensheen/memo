@@ -1,0 +1,99 @@
+---
+layout: docs/layout/docs
+title: tutorial - rxjs
+---
+
+[[## head:
+<style>
+    body {width: 80%; margin: auto;}
+    h1 {margin-top: 30px;border-bottom: 2px dashed #aaaaaa; color: darkblue;}
+    h2 {margin-top: 20px;border-bottom: 1px solid #eeeeee;}
+    h3 {margin-top: 10px;}
+    .section {
+        margin-top: 20px;
+    }
+</style>
+##]]
+
+
+[[## header:
+##]]
+
+[[## content:
+<section class="basics">
+    <h1>The basics</h1>
+
+    <div class="section control-flow">
+        <h2>控制事件流</h2>
+        <input title='control-flow' id="control_flow_input" type="text" />
+        <button class="control-flow-button">stop</button>
+        <span class="control-flow-span"></span>
+    </div>
+
+    <div class="section produce-value">
+        <h2>值的处理</h2>
+        <input title="produce-value" id="produce_value_input" type="text" />
+        <span class="produce-value-span"></span>
+    </div>
+</section>
+##]]
+
+
+[[## footer: ##]]
+
+[[## script:
+<script>
+    // ============== 控制事件流 ==============
+    let control_flow_rxjs = new Rx.Subject();
+    let control_flow_span = document.querySelector('.control-flow-span');
+    control_flow_rxjs.subscribe(value => control_flow_span.innerText = value);
+
+    let control_flow_input_rxjs = Rx.Observable.fromEvent(document.querySelector('#control_flow_input'), 'keyup');
+    let control_flow_button_rxjs = Rx.Observable.fromEvent(document.querySelector('.control-flow-button'), 'click');
+
+    // 过滤，输入字符长度大于3时通过
+    control_flow_input_rxjs.filter(event => event.target.value.length > 0).subscribe(event => control_flow_rxjs.next(event.target.value));
+
+    // 事件推迟
+    //control_flow_input_rxjs.delay(500).subscribe(event => control_flow_rxjs.next(event.target.value));
+
+    // 一定时间间隔的事件通过
+    //control_flow_input_rxjs.throttleTime(500).subscribe(event => control_flow_rxjs.next(event.target.value));
+
+    // 间隔后最近的事件通过
+    //control_flow_input_rxjs.debounceTime(200).subscribe(event => control_flow_rxjs.next(event.target.value));
+
+    // 获取3次事件之后停止接收
+    //control_flow_input_rxjs.take(3).subscribe(event => control_flow_rxjs.next(event.target.value));
+
+    // 当停止事件发生后停止接收
+    //control_flow_input_rxjs.takeUntil(control_flow_button_rxjs).subscribe(event => control_flow_rxjs.next(event.target.value));
+
+
+
+    // =============== 值的处理 ===============
+    let produce_value_rxjs = new Rx.Subject();
+    let produce_value_span = document.querySelector('.produce-value-span');
+    produce_value_rxjs.subscribe(value => produce_value_span.innerText = value);
+
+    let produce_value_input_rxjs = Rx.Observable.fromEvent(document.querySelector('#produce_value_input'), 'keyup');
+
+    // 传递一个新值
+    //produce_value_input_rxjs.map(event => `${event.target.value}: ${Date.now()}`).subscribe(value => produce_value_rxjs.next(value));
+
+    // 将值取出并传递
+    //produce_value_input_rxjs.pluck('target', 'value').subscribe(value => produce_value_rxjs.next(value));
+
+    // 返回之前和当前的值
+    //produce_value_input_rxjs.pluck('target', 'value').pairwise().subscribe(value => produce_value_rxjs.next(value));
+
+    // 仅返回不重复的值
+    //produce_value_input_rxjs.distinct(event => event.key).pluck('target', 'value').subscribe(value => produce_value_rxjs.next(value));
+
+    // 只传不连续的值
+    //produce_value_input_rxjs.distinctUntilChanged((pre, cur) => pre.key === cur.key).pluck('target', 'value').subscribe(value => produce_value_rxjs.next(value));
+
+    // 根据key判断是否连续的值
+    produce_value_input_rxjs.distinctUntilKeyChanged('key').pluck('target', 'value').subscribe(value => produce_value_rxjs.next(value));
+</script>
+##]]
