@@ -95,3 +95,59 @@ input.distinctUntilChannged((pre, cur) => pre.key === cur.key).pluck('target', '
 ----------------------------------------------------
 > RxJS是一个很棒的工具，使用无状态函数，使你的代码更加健壮。但是我们的应用是有状态的，那无状态的RxJS和有状态的应用是怎么联系起来的？
 > 让我们建立一个简单应用存储值为0，然后每点击一次，值加1.
+
+```javascript
+var button = document.querySelector('button');
+Rx.Observable.fromEvent(button, 'click')
+	.scan(count => count + 1, 0)
+	.subscribe(count => document.querySelector('#count').innerHTML = count);
+```
+
+## 状态存储
+> 应用使用state stores存储状态。不同的框架有不同的叫法：store, reducer, model，但是核心之处它们都是一个对象。而我们还需要处理的是多个可观察对象更新同一个state store。
+
+```javascript
+var increaseButton = document.querySelector('#increase');
+var increase = Rx.Observable.fromEvent(increaseButton, 'click')
+  // 当递增事件发生时，返回一个可以state.count+1的函数
+  .map(() => state => Object.assign({}, state, {count: state.count + 1}));
+
+var decreaseButton = document.querySelector('#decrease');
+var decrease = Rx.Observable.fromEvent(decreaseButton, 'click')
+  // 当递减事件发生时，返回一个可以state.count-1的函数
+  .map(() => state => Object.assign({}, state, {count: state.count - 1}));
+
+var inputElement = document.querySelector('#input');
+var input = Rx.Observable.fromEvent(inputElement, 'keypress')
+  // 输入事件发生时，返回一个对state.inputValue赋值的函数
+  .map(event => state => Object.assign({}, state, {inputValue: event.target.value}));
+
+// 将递增、递减、输入可观察对象合并为一个可观察对象
+var state = Rx.Observable.merge(
+  increase,
+  decrease,
+  input
+).scan((state, changeFn) => changeFn(state), {
+  count: 0,
+  inputValue: ''
+});
+
+var prevState = {};
+state.subscribe((state) => {
+  if (state.count !== prevState.count) {
+    document.querySelector('#count').innerHTML = state.count;
+  }
+  if (state.inputValue !== prevState.inputValue) {
+    document.querySelector('#hello').innerHTML = 'Hello ' + state.inputValue;
+  }
+  prevState = state;
+});
+```
+
+## Immutable JS
+
+> 你也可以使用Immutable JS为应用创建一个全局的state store。Immutable JS是创建不可变集合的很棒工具，它可以通过检查值是否改变来优化渲染过程。
+
+``` javascript
+
+```

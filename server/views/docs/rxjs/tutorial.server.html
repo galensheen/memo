@@ -36,6 +36,21 @@ title: tutorial - rxjs
         <span class="produce-value-span"></span>
     </div>
 </section>
+
+<section class="apps">
+    <h1>Creating applications</h1>
+
+    <div class="section state-store">
+        <button class="increase">increase</button>
+        <button class="decrease">decrease</button>
+        <input type="text" class="input" />
+        <div>
+            <span class="count"></span>
+            <span class="hello"></span>
+        </div>
+
+    </div>
+</section>
 ##]]
 
 
@@ -95,5 +110,37 @@ title: tutorial - rxjs
 
     // 根据key判断是否连续的值
     produce_value_input_rxjs.distinctUntilKeyChanged('key').pluck('target', 'value').subscribe(value => produce_value_rxjs.next(value));
+
+
+    // ======================= 创建apps =======================
+    let increaseButton = document.querySelector('.apps .increase');
+
+    // 单击按钮，每次加1
+    //Rx.Observable.fromEvent(increaseButton, 'click').scan(count => count + 1, 0).subscribe(count => countSpan.innerHTML = count);
+
+    // 状态存储
+    let increase = Rx.Observable.fromEvent(increaseButton, 'click').map(() => state => Object.assign({}, state, {count: state.count + 1}));
+
+    let decreaseButton = document.querySelector(('.apps .decrease'));
+    let decrease = Rx.Observable.fromEvent(decreaseButton, 'click').map(() => state => Object.assign({}, state, {count: state.count - 1}));
+
+    let inputElement = document.querySelector('.apps .input');
+    let input = Rx.Observable.fromEvent(inputElement, 'keyup').map(event => state => Object.assign({}, state, {inputValue: event.target.value}));
+
+    let state = Rx.Observable.merge(increase, decrease, input).scan((state, changeFn) => changeFn(state), {count: 0, inputValue: ''});
+
+    // 订阅state并更新DOM
+    let prevState = {};
+    let $count = document.querySelector('.apps .count');
+    let $hello = document.querySelector('.apps .hello');
+    state.subscribe((state) => {
+        if (state.count !== prevState.count) {
+            $count.innerHTML = state.count;
+        }
+        if (state.inputValue !== prevState.inputValue) {
+            $hello.innerHTML = `Hello ${state.inputValue}`;
+        }
+        prevState = state;
+    });
 </script>
 ##]]
