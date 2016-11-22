@@ -349,18 +349,184 @@ observable.subscribe(subject);
 
 > Subject还有一些其它的特性: BehaviorSubject, ReplaySubject, and AsyncSubject.
 
-### Observables广播
+### 广播Observables
+multicasted Observable可以将通知下发给拥有多个订阅者的Subject，而不可广播的Observable只能将通知下发给一个订阅者。
+> Multicasted Observable通过Subject，使更多的订阅者观察到同一个Observable的执行。
 
+这个钩子就是广播的实现方式: 订阅者们订阅一个Subject, 这个Subject订阅一个源Observable。
 
+下面的例子类似之前使用了obversable.subscribe(Subject)的例子
 
-#### 计数功能
+```javascript
+var source = Rx.Observable.of([1,2,3]);
+var subject = new Rx.Subject();
+var multicasted = source.multicast(subject);
 
-#### 主题行为
+// 等价于source.subscribe()
+multicasted.subscribe({
+	next: x => console.log('observerA: ' + x);
+});
+multicasted.subscribe({
+	next: x => console.log('observerB: ' + x);
+});
+
+// 等价于source.subscribe(suject)
+multicasted.connect();
+```
+
+#### Reference counting
+手动调用connect()和处理Subscription总是显得有些笨重。通常，我希望第一个Observer到达的时候自动connect，并且当最后一个Observer取消订阅的时候自动取消共享。
+
+考虑下面的例子:
+
+1. 第一个Observer订阅广播Observable
+2. **广播Observable连接**
+3. next的值0广播给第一个订阅者
+4. 第二个Observer订阅广播Observable
+5. next的值1广播给第一个订阅者
+6. next的值1广播给第二个订阅者
+7. 第一个订阅者取消订阅广播Observable
+8. next的值2广播给第二个订阅者
+9. 第二个订阅者取消订阅广播Observable
+10. **广播observable的订阅取消**
+
+直接使用connect来实现，代码如下:
+
+```javascript
+var source = Rx.Observable.interval(500);
+var subject = new Rx.Subject();
+var multicasted = source.multicast(subject);
+var subscription1, subscription2, subscriptionConnect;
+
+subscription1 = multicasted.subscribe({
+	next: (v) => console.log('observerA: ' + v);
+});
+
+subscriptionConnect = multicasted.connect();
+
+setTimeout(() => {
+	subscription2 = multicasted.subscribe({
+		next: (v) => console.log('observerB: ' + v);
+	});
+}, 600);
+
+setTimeout(() => {
+	subscription1.unsubscribe();
+}, 1200);
+
+setTimeout(() => {
+	subscription2.unsubscribe();
+	sbscriptionConnect.unsubscribe();
+}, 2000);
+```
+
+如果不想直接使用connect(), 我们可以使用refCount()这个方法。这个方法返回一个跟踪订阅者数量的Observable。当订阅数从0变为1的时候，将替我们执行connect()。当订阅书从1变为0的时候，将自动停止订阅。
+> refCount可以使广播Observable在第一个订阅出现的时候自动connect, 订阅数变为0的时候停止订阅。
+
+下面是一个例子:
+
+```javascript
+var source = Rx.Observable.interval(500);
+var subject= new Rx.Subject();
+var refCounted = source.multicast(subject).refCount();
+var subscription1, subscription2, subscriptionConnect;
+
+console.log('observerA subscribed');
+subscription1 = refCounted.subscribe({
+	next: (v) => console.log('observerA: ' + v);
+});
+
+setTimeout(() => {
+	console.log('observerB subscribed');
+	subscription2 = refCounted.subscribe({
+		next: (v) => console.log('observerB: ' + v);
+	});
+}, 600);
+
+setTimeout(() => {
+	console.log('observerA unsubscribed');
+	subscription1.unsubscribe();
+}, 1200);
+
+setTimeout(() => {
+	console.log('observerB unsubscribed');
+	subscription2.unsubscribe();
+}, 2000);
+
+```
+
+#### BehaviorSubject
+`BehaviorSubject`是Subjects的一个变体，具有"the current value"的概念。它保存这发送给消费者的最后一个值，无论何时有新的订阅者加入时，它都会立即将保存的只发送给这个新订阅者。
+
+接下来的例子，BehaviorSubject的初始值为0，第一个订阅者将接收到这个值。第二个订阅者将接收到2，尽管这个时候2已经发送出去了。
+
+```javascript
+var subject = new Rx.BehaviorSubject(0);
+subject.subscribe({
+	next: (v) => console.log('observerA: ' + v)
+});
+
+subject.next(1);
+subject.next(2);
+
+subject.subscribe({
+	next: (v) => console.log('observerB: ' + v)
+});
+
+subject.next(3);
+```
 
 #### ReplaySubject
+`ReplaySubject`类似`BehaviorSubject`， 它可以记录过去的值。
+> ReplaySubject记录了Observable的多个值，并且重新传给新的subscribers
+
+当创建一个`ReplaySubject`，可以指定回放多少个值:
+
+```javascript
+var subject = new Rx.ReplaySubject(3);
+
+subject.subscribe({
+	next: (v) => console.log('observerA: ' + v)
+});
+
+subject.next(1);
+subject.next(2);
+subject.next(3);
+subject.next(4);
+
+subject.subscribe({
+	next: (v) => console.log('observerB: ' + v)
+});
+
+subject.next(5);
+```
 
 #### AsyncSubject
+`AsyncSubject`是一个变体，他只发送最后一个Observable的值，并且当Observable完成的时候触发。
 
+```javascript
+var subject = new Rx.AsyncSubject();
+
+subject.subscribe({
+	next: (v) => console.log('observerA: ' + v)
+});
+
+subject.next(1);
+subject.next(2);
+subject.next(3);
+subject.next(4);
+
+subject.subscribe({
+	next: (v) => console.log('observerB: ' + v)
+});
+
+subject.next(5);
+subject.complete();
+
+//输出:
+observerA: 5
+observerB: 5
+```
 ## Operators
 
 ### 什么是Operators
