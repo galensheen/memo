@@ -1,0 +1,43 @@
+---
+layout: docs/layout/docs
+title: zone.js
+---
+
+[[## head:
+<script src="http://cdn.bootcss.com/zone.js/0.7.1/zone.js"></script>
+##]]
+
+[[## content:
+<h1>This is the zone.js page.</h1>
+##]]
+
+[[## script:
+<script>
+let log = function(phase) {
+    return function () {
+        console.log(`I am in zone.js ${phase}!`);
+    };
+};
+let z = new Zone();
+z.fork({
+    onZoneCreated: log('onZoneCreated'),
+    beforeTask: log('beforeTask'),
+    afterTask: log('afterTask')
+}).run(() => {
+    let methodLog = function (func) {
+        return function () {
+            console.log(`I am from ${func} function!`);
+        }
+    },
+        foo = methodLog('foo'),
+        bar = methodLog('bar'),
+        baz = function () {
+            setTimeout(methodLog('baz in setTimeout'), 0);
+        };
+
+    foo();
+    baz();
+    bar();
+})
+</script>
+##]]

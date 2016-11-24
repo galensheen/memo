@@ -18,10 +18,12 @@ RxJS解决异步事件的核心概念有:
 ### 第一个例子
 Normally you register event listeners.
 
+{% highlight ruby %}
 ```javascript
 var button = document.querySelector('button');
 button.addEventListener('click', () => console.log('Clicked!'));
 ```
+{% endhighlight %}
 使用RxJS可以这样写
 
 ```javascript
@@ -527,38 +529,4 @@ subject.complete();
 observerA: 5
 observerB: 5
 ```
-## Operators
 
-### 什么是Operators
-
-### 实例operators vs 静态operators
-
-### Marble diagrams
-
-### 选择一个operator
-
-### 分类
-
-#### 创建
-
-#### 转换
-
-#### 过滤
-
-#### 连接
-
-#### 广播
-
-#### 错误处理
-
-#### 适用操作
-
-#### 条件和布尔
-
-#### 数学和集合
-
-## Scheduler(调度)
-
-### 调度类型
-
-### 使用调度
